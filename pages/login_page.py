@@ -1,5 +1,7 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
+from pages.inventory_page import InventoryPage
+
 
 class LoginPage(BasePage):
     URL = "https://www.saucedemo.com/"
@@ -18,7 +20,7 @@ class LoginPage(BasePage):
         self._type(self.USERNAME_INPUT, username)
         self._type(self.PASSWORD_INPUT, password)
         self._click(self.SUBMIT_BUTTON)
-        return self
+        return InventoryPage(self.driver)
 
     def get_error_message(self):
         return self._find(self.ERROR_MESSAGE).text
