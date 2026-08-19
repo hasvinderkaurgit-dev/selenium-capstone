@@ -2,7 +2,7 @@ import pytest
 from conftest import driver
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
-from pages.cart_page import CartPage
+from pages.cart_page import ShoppingCart
 
 
 #def test_login(driver):
@@ -18,7 +18,7 @@ from pages.cart_page import CartPage
 #def test_add_items(driver, selected_items):
 
 #    inventory = LoginPage(driver).load().login("standard_user", "secret_sauce")
-#    cart = CartPage(driver)
+#    cart = ShoppingCart(driver)
 
 #    # Ensure inventory page is loaded
 #    assert inventory.is_loaded()
@@ -46,7 +46,7 @@ from pages.cart_page import CartPage
 ])
 def test_add_and_partial_remove(driver, selected_items, items_to_remove):
     inventory = LoginPage(driver).load().login("standard_user", "secret_sauce")
-    cart = CartPage(driver)
+    cart = ShoppingCart(driver)
 
     # Step 1: Add all items
     for item in selected_items:
@@ -66,3 +66,18 @@ def test_add_and_partial_remove(driver, selected_items, items_to_remove):
     for item in remaining_items:
         inventory.remove_from_cart(item)
     assert cart.get_item_count() == 0
+
+
+def test_filter_sort(driver):
+    inventory = LoginPage(driver).load().login("standard_user", "secret_sauce")
+    assert inventory.is_loaded()
+
+    # Sort by Name (A to Z)
+    inventory.apply_filter("Name (A to Z)")
+    names = inventory.get_item_names()
+    assert names == sorted(names)
+
+    # Sort by Price (low to high)
+    inventory.apply_filter("Price (low to high)")
+    prices = inventory.get_item_prices()
+    assert prices == sorted(prices)
