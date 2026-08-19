@@ -6,7 +6,7 @@ class LoginPage(BasePage):
 
     USERNAME_INPUT = (By.ID, "user-name")
     PASSWORD_INPUT = (By.ID, "password")
-    SUBMIT_BUTTON = (By.XPATH, "//button[@type='submit']")
+    SUBMIT_BUTTON = (By.ID, "login-button")
     ERROR_MESSAGE = (By.CSS_SELECTOR, "[data-test='error']")
     ERROR_BUTTON = (By.CSS_SELECTOR, "button[data-test='error-button']")
 
