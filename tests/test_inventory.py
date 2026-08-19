@@ -1,8 +1,7 @@
 import pytest
-from conftest import driver
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
-from pages.cart_page import ShoppingCart
+from pages.cart_page import CartPage
 
 
 #def test_login(driver):
@@ -18,7 +17,7 @@ from pages.cart_page import ShoppingCart
 #def test_add_items(driver, selected_items):
 
 #    inventory = LoginPage(driver).load().login("standard_user", "secret_sauce")
-#    cart = ShoppingCart(driver)
+#    cart = CartPage(driver)
 
 #    # Ensure inventory page is loaded
 #    assert inventory.is_loaded()
@@ -46,7 +45,7 @@ from pages.cart_page import ShoppingCart
 ])
 def test_add_and_partial_remove(driver, selected_items, items_to_remove):
     inventory = LoginPage(driver).load().login("standard_user", "secret_sauce")
-    cart = ShoppingCart(driver)
+    cart = CartPage(driver)
 
     # Step 1: Add all items
     for item in selected_items:

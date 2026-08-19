@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
 
-class ShoppingCart(BasePage):
+class CartPage(BasePage):
     URL = "https://www.saucedemo.com/cart.html"
     CART_CONTAINER = (By.ID, "shopping_cart_container")
     CART_LINK = (By.CSS_SELECTOR, "a[data-test='shopping-cart-link']")
