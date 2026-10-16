@@ -11,10 +11,15 @@ class CartPage(BasePage):
     ITEM_NAME = (By.CLASS_NAME, "inventory_item_name")
     PAGE_TITLE = (By.CSS_SELECTOR, "[data-test='title']")
     SORT_DROPDOWN = (By.CSS_SELECTOR, "[data-test='product-sort-container']")
+    CHECKOUT_BUTTON = (By.ID, "checkout")
 
     def open_cart(self):
         self._click(self.CART_LINK)
         self.wait.until(EC.visibility_of_element_located(self.PAGE_TITLE))
+        return self
+
+    def click_checkout(self):
+        self._click(self.CHECKOUT_BUTTON)
         return self
 
     def get_item_count(self):

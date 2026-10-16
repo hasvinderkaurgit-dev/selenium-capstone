@@ -20,7 +20,16 @@ class LoginPage(BasePage):
         self._type(self.USERNAME_INPUT, username)
         self._type(self.PASSWORD_INPUT, password)
         self._click(self.SUBMIT_BUTTON)
-        return InventoryPage(self.driver)
+        self.wait.until(
+        lambda d: "inventory.html" in d.current_url or self._is_error_visible()
+        )
+        if "inventory.html" in self.driver.current_url:
+            return InventoryPage(self.driver)
+        return self
+
+    def _is_error_visible(self):
+        elements = self.driver.find_elements(*self.ERROR_MESSAGE)
+        return bool(elements) and elements[0].is_displayed()
 
     def get_error_message(self):
         return self._find(self.ERROR_MESSAGE).text
