@@ -38,4 +38,4 @@ def pytest_runtest_makereport(item, call):
             screenshot_b64 = driver.get_screenshot_as_base64()
             extra.append(extras.image(screenshot_b64, mime_type="image/png"))
 
-    report.extras = extra
+    report.extra = extra

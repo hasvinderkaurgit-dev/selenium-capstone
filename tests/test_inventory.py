@@ -36,6 +36,14 @@ from pages.cart_page import CartPage
 #    #Verify badge count after removing
 #    assert cart.get_item_count() == 0
 
+SLUG_TO_NAME = {
+    "sauce-labs-backpack": "Sauce Labs Backpack",
+    "sauce-labs-bike-light": "Sauce Labs Bike Light",
+    "sauce-labs-bolt-t-shirt": "Sauce Labs Bolt T-Shirt",
+    "sauce-labs-fleece-jacket": "Sauce Labs Fleece Jacket",
+    "sauce-labs-onesie": "Sauce Labs Onesie",
+    "test.allthethings()-t-shirt-(red)": "Test.allTheThings() T-Shirt (Red)",
+}
 
 @pytest.mark.parametrize("selected_items, items_to_remove", [
     (["sauce-labs-backpack"], ["sauce-labs-backpack"]),  # add 1, remove 1
@@ -43,35 +51,46 @@ from pages.cart_page import CartPage
     (["sauce-labs-backpack", "sauce-labs-bike-light", "sauce-labs-bolt-t-shirt"], ["sauce-labs-bike-light", "sauce-labs-bolt-t-shirt"]),  # add 3, remove 2
     (["sauce-labs-onesie", "sauce-labs-fleece-jacket"], ["sauce-labs-onesie"]),  # add 2, remove 1
 ])
+
 def test_add_and_partial_remove(driver, selected_items, items_to_remove):
     inventory = LoginPage(driver).load().login("standard_user", "secret_sauce")
     cart = CartPage(driver)
 
-    # Step 1: Add all items
-    for item in selected_items:
+    # Step 1: Add all items, verify count and contents
+    for added_count, item in enumerate(selected_items, start=1):
         inventory.add_to_cart(item)
-    assert cart.get_item_count() == len(selected_items)
+        assert cart.get_item_count() == added_count
+
+    expected_items = [SLUG_TO_NAME[item] for item in selected_items]
+    cart.open_cart()
+    cart.wait_for_items(expected_items)
+    inventory.load()
 
     # Step 2: Remove only the specified subset
     for item in items_to_remove:
         inventory.remove_from_cart(item)
 
-    # Step 3: Verify badge count reflects remaining items
+    # Step 3: Verify remaining count and contents
     expected_count = len(selected_items) - len(items_to_remove)
     assert cart.get_item_count() == expected_count
 
-    # Step 4: Clean up — remove the rest so cart is empty
     remaining_items = [i for i in selected_items if i not in items_to_remove]
+    expected_remaining = [SLUG_TO_NAME[i] for i in remaining_items]
+    cart.open_cart()
+    cart.wait_for_items(expected_remaining)
+    inventory.load()
+
+    # Step 4: Clean up — remove the rest so cart is empty
     for item in remaining_items:
         inventory.remove_from_cart(item)
     assert cart.get_item_count() == 0
-
 
 def test_filter_sort(driver):
     inventory = LoginPage(driver).load().login("standard_user", "secret_sauce")
     assert inventory.is_loaded()
 
     # Sort by Name (A to Z)
+    
     inventory.apply_filter("Name (A to Z)")
     names = inventory.get_item_names()
     assert names == sorted(names)
